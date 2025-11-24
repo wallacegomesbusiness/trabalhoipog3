@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,25 +20,25 @@ import com.br.exception.ResourceNotFoundException;
 import com.br.model.ListaTarefa;
 import com.br.repository.ListaTarefaRepository;
 
-// Endereço: http://localhost:8080/listatarefa
+// Endereço: http://localhost:8080/listatarefa/v1
 
-@RequestMapping("/listatarefa/")
+@RequestMapping("/listatarefa/v1/")
 @RestController
-public class ListaTarefaController {
+public class ListaTarefaController_v1 {
 	
 	// Criando uma instancia do repositorio JPA Hibernate
 	@Autowired
 	private ListaTarefaRepository lRep;
 	
 	// Lista todos os usúarios:
-	// GET - http://localhost:8080/listatarefa/lista
+	// GET - http://localhost:8080/listatarefa/v1/lista
 	@GetMapping("/lista")
 	public List<ListaTarefa> listar(){
-		return this.lRep.findAll();
+		return this.lRep.findAll(Sort.by(Sort.Direction.DESC, "id"));
 	}
 	
 	// Consultar um usuario específico:
-	// GET - http://localhost:8080/listatarefa/lista/{id}
+	// GET - http://localhost:8080/listatarefa/v1/lista/{id}
 	@GetMapping("/lista/{id}")
 	public ResponseEntity<ListaTarefa> consultar(@PathVariable Long id){
 		ListaTarefa lista = this.lRep.findById(id).orElseThrow(() -> 
@@ -47,14 +48,14 @@ public class ListaTarefaController {
 	};
 	
 	// Inserir um novo usuário
-	// POST - http://localhost:8080/listatarefa/lista
+	// POST - http://localhost:8080/listatarefa/v1/lista
 	@PostMapping("/lista")
 	public ListaTarefa inserir(@RequestBody ListaTarefa lista) {
 		return this.lRep.save(lista);
 	}
 	
 	// Alterar um  usuário existente
-	// PUT - http://localhost:8080/listatarefa/lista/{id}
+	// PUT - http://localhost:8080/listatarefa/v1/lista/{id}
 	@PutMapping("/lista/{id}")
 	public ResponseEntity<ListaTarefa> alterar(@PathVariable Long id,@RequestBody ListaTarefa lista){
 		ListaTarefa list = this.lRep.findById(id).orElseThrow(() ->
@@ -70,7 +71,7 @@ public class ListaTarefaController {
 	}
 	
 	// Excluir um usuário existente
-	// DELETE - http://localhost:8080/listatarefa/lista/{id}
+	// DELETE - http://localhost:8080/listatarefa/v1/lista/{id}
 	@DeleteMapping("/lista/{id}")
 	public ResponseEntity<Map<String, Boolean>> excluir(@PathVariable Long id){
 		
